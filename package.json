@@ -1,8 +1,14 @@
 {
   "name": "reddit-with-snack",
+  "scripts": {
+    "test": "yarn run eslint && NODE_ENV= yarn run jest",
+    "lint": "eslint src/. --config .eslintrc.json",
+    "dev": "nodemon src/",
+    "start": "node src/",
+    "jest": "jest"
+  },
   "description": "",
   "version": "0.0.0",
-  "homepage": "",
   "main": "src",
   "keywords": [
     "feathers"
@@ -22,13 +28,6 @@
     "node": "^10.0.0",
     "yarn": ">= 0.18.0"
   },
-  "scripts": {
-    "test": "yarn run eslint && NODE_ENV= yarn run jest",
-    "eslint": "eslint src/. test/. --config .eslintrc.json",
-    "dev": "nodemon src/",
-    "start": "node src/",
-    "jest": "jest"
-  },
   "dependencies": {
     "@feathersjs/configuration": "^2.0.4",
     "@feathersjs/errors": "^3.3.4",
@@ -42,7 +41,15 @@
     "winston": "^3.0.0"
   },
   "devDependencies": {
-    "eslint": "^5.9.0",
+    "babel-eslint": "^10.0.1",
+    "eslint": "^5.15.1",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-import": "^2.16.0",
+    "eslint-plugin-node": "^8.0.1",
+    "eslint-plugin-promise": "^4.0.1",
+    "eslint-plugin-standard": "^4.0.0",
+    "eslint-plugin-vue": "^5.2.2",
     "jest": "^24.5.0",
     "nodemon": "^1.18.7",
     "request": "^2.88.0",
