@@ -16,6 +16,8 @@
     "semi": [
       "error",
       "never"
-    ]
+    ],
+    "import/no-unresolved": 0,
+    "no-param-reassign": 0
   }
 }

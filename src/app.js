@@ -1,3 +1,4 @@
+require('module-alias/register')
 const path = require('path')
 const favicon = require('serve-favicon')
 const compress = require('compression')
@@ -7,14 +8,17 @@ const cors = require('cors')
 const feathers = require('@feathersjs/feathers')
 const configuration = require('@feathersjs/configuration')
 const express = require('@feathersjs/express')
-const socketio = require('@feathersjs/socketio')
+// const socketio = require('@feathersjs/socketio')
 const logger = require('./logger')
 
 
 const middleware = require('./middleware')
 const services = require('./services')
 const appHooks = require('./app.hooks')
-const channels = require('./channels')
+const objection = require('./objection')
+const models = require('./models/configs')
+// const playground = require('./playground')
+// const channels = require('./channels')
 
 const app = express(feathers())
 
@@ -32,15 +36,17 @@ app.use('/', express.static(app.get('public')))
 
 // Set up Plugins and providers
 app.configure(express.rest())
-app.configure(socketio())
-
+// app.configure(socketio())
+app.configure(objection)
+app.configure(models)
 // Configure other middleware (see `middleware/index.js`)
 app.configure(middleware)
 // Set up our services (see `services/index.js`)
 app.configure(services)
 // Set up event channels (see channels.js)
-app.configure(channels)
+// app.configure(channels)
 
+// app.configure(playground)
 // Configure a middleware for 404s and the error handler
 app.use(express.notFound())
 app.use(express.errorHandler({ logger }))
