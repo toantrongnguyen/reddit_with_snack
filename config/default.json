@@ -14,5 +14,8 @@
       "password": "123456",
       "database": "reddit_db"
     }
+  },
+  "jwt": {
+    "secret": "secret"
   }
 }

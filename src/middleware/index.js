@@ -1,5 +1,5 @@
-// eslint-disable-next-line no-unused-vars
+const authenticationMiddleware = require('./authentication.middleware')
+
 module.exports = function middleware(app) {
-  // Add your custom middleware here. Remember that
-  // in Express, the order matters.
+  app.use('authentication', authenticationMiddleware)
 }

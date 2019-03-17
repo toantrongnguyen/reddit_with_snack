@@ -23,6 +23,7 @@ class UsersService {
         })
       return true
     } catch (e) {
+      this.app.get('logger').error(e)
       throw new BadRequest('Error create user')
     }
   }
