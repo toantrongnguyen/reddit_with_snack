@@ -1,6 +1,6 @@
 const hooks = require('@hooks/users.hooks')
 const { UsersModel } = require('@models')
-const { BadRequest } = require('@feathersjs/errors')
+const { BadRequest, Unprocessable } = require('@feathersjs/errors')
 
 class UsersService {
   constructor(app) {
@@ -8,17 +8,23 @@ class UsersService {
     this.UsersModel = UsersModel
   }
 
-  find() {
-    return this.UsersModel.query()
+  async find(data) {
+    try {
+      return data
+    } catch (e) {
+      this.app.get('logger').error(e)
+      return new Unprocessable()
+    }
   }
 
   async create(data) {
-    const { email, createdAt } = data
+    const { email, password, createdAt } = data
     try {
       await this.UsersModel
         .query()
         .insert({
           email,
+          password,
           createdAt,
         })
       return true

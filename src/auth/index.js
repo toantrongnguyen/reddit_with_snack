@@ -1,21 +1,26 @@
 const passport = require('passport')
-const LocalStrategy = require('passport-local').Strategy
+const BearerStrategy = require('passport-http-bearer')
+const { UsersModel, AccessTokensModel } = require('@models')
+const { Unprocessable, NotAuthenticated } = require('@feathersjs/errors')
 
-module.exports = function auth(app) {
-  passport.use(new LocalStrategy({
-    usernameField: 'email',
-    passwordField: 'password',
-  }, (email, password, done) => {
-    Promise.resolve({ email, password })
-      .then((user) => {
-        if (!user || email !== 'test@gmail.com') {
-          return done(null, false, { message: 'Incorrect email or password.' })
-        }
-        return done(null, user, { message: 'Logged In Successfully' })
-      })
-      .catch((error) => {
-        app.get('logger').error(error)
-        done(error)
-      })
-  }))
+module.exports = function services(app) {
+  passport.use(new BearerStrategy(
+    ((token, done) => {
+      AccessTokensModel
+        .query()
+        .select('users.*', 'accessTokens.*')
+        .join('users', 'users.id', 'accessTokens.id')
+        .where('accessToken', '=', token)
+        .then((users) => {
+          if (!users || !users.length) {
+            return done(new NotAuthenticated(), false)
+          }
+          return done(null, users[0], { scope: 'all' })
+        })
+        .catch((error) => {
+          app.get('logger').error(error)
+          done(new Unprocessable())
+        })
+    }),
+  ))
 }

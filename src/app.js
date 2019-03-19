@@ -31,7 +31,7 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(favicon(path.join(app.get('public'), 'favicon.ico')))
 // Host the public folder
-app.use('/', express.static(app.get('public')))
+// app.use('/', express.static(app.get('public')))
 
 // Set up Plugins and providers
 app.configure(express.rest())
@@ -49,6 +49,7 @@ app.configure(services)
 // app.configure(channels)
 
 app.set('logger', logger)
+app.set('log', logger.info)
 
 // Configure a middleware for 404s and the error handler
 app.use(express.notFound())
