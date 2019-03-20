@@ -1,5 +1,21 @@
-// eslint-disable-next-line no-unused-vars
+const passport = require('passport')
+// const authenticationMiddleware = require('./authentication.middleware')
+
+const PUBLIC_PATH = ['/signup', '/login']
+
 module.exports = function middleware(app) {
-  // Add your custom middleware here. Remember that
-  // in Express, the order matters.
+  app.use(
+    '/',
+    (req, res, next) => {
+      if (PUBLIC_PATH.includes(req.url)) {
+        next()
+        return
+      }
+      passport.authenticate('bearer', { session: false })(req, res, next)
+    },
+    (req, res, next) => {
+      req.feathers.user = req.user
+      next()
+    },
+  )
 }

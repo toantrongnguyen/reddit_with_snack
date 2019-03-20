@@ -4,8 +4,11 @@ const { UsersChemas } = require('@schemas')
 module.exports = {
   before: {
     all: [],
-    find: [],
     get: [],
+    find(context) {
+      context.data = context.params.user
+      return context
+    },
     async create(context) {
       try {
         const data = await UsersChemas.createUserSchema.validate(context.data)
