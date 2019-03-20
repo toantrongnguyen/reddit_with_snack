@@ -17,5 +17,6 @@
   },
   "jwt": {
     "secret": "secret"
-  }
+  },
+  "saltRounds": 10
 }

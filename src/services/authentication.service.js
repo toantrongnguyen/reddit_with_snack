@@ -1,6 +1,7 @@
 const { Unprocessable, NotAuthenticated } = require('@feathersjs/errors')
 const { UsersModel, AccessTokensModel } = require('@models')
 const jwt = require('jsonwebtoken')
+const bcrypt = require('bcrypt')
 
 class AuthenticationService {
   constructor(app) {
@@ -15,9 +16,12 @@ class AuthenticationService {
       const users = await this.UsersModel
         .query()
         .where('email', '=', email)
-        .andWhere('password', '=', password)
       if (!users.length) return new NotAuthenticated()
-      return this.generateJWTToken(users[0])
+      const user = users[0]
+      const hashedPassword = user.password
+      const isMatchedPassword = await bcrypt.compare(password, hashedPassword)
+      if (!isMatchedPassword) return new NotAuthenticated()
+      return this.generateJWTToken(user)
     } catch (e) {
       this.app.get('log')(e)
       return new Unprocessable()
@@ -25,8 +29,8 @@ class AuthenticationService {
   }
 
   async generateJWTToken(payload) {
-    const { email, password, id } = payload
-    const accessToken = jwt.sign({ email, password }, this.app.get('jwt').secret)
+    const { email, id } = payload
+    const accessToken = jwt.sign({ email, id }, this.app.get('jwt').secret)
     try {
       await this.AccessTokensModel
         .query()
@@ -39,9 +43,6 @@ class AuthenticationService {
   }
 }
 
-AuthenticationService.ROUTE = '/authentication'
+AuthenticationService.ROUTE = '/login'
 
-module.exports = function createService(app) {
-  app.use(AuthenticationService.ROUTE, new AuthenticationService(app))
-  // const service = app.service('/authentication')
-}
+module.exports = AuthenticationService

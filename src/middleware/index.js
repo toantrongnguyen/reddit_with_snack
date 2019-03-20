@@ -1,12 +1,13 @@
-// const authenticationMiddleware = require('./authentication.middleware')
 const passport = require('passport')
+// const authenticationMiddleware = require('./authentication.middleware')
+
+const PUBLIC_PATH = ['/signup', '/login']
 
 module.exports = function middleware(app) {
-  // app.use('authentication', authenticationMiddleware)
   app.use(
     '/',
     (req, res, next) => {
-      if ((req.url === '/users' && req.method === 'POST') || req.url === '/authentication') {
+      if (PUBLIC_PATH.includes(req.url)) {
         next()
         return
       }

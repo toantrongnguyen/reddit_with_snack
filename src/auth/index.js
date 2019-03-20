@@ -1,6 +1,6 @@
 const passport = require('passport')
 const BearerStrategy = require('passport-http-bearer')
-const { UsersModel, AccessTokensModel } = require('@models')
+const { AccessTokensModel } = require('@models')
 const { Unprocessable, NotAuthenticated } = require('@feathersjs/errors')
 
 module.exports = function services(app) {
@@ -9,7 +9,7 @@ module.exports = function services(app) {
       AccessTokensModel
         .query()
         .select('users.*', 'accessTokens.*')
-        .join('users', 'users.id', 'accessTokens.id')
+        .join('users', 'users.id', 'accessTokens.userId')
         .where('accessToken', '=', token)
         .then((users) => {
           if (!users || !users.length) {
