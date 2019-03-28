@@ -19,7 +19,7 @@ class PostsService {
     const { title, body, isDraft } = data
     const userId = params.user.id
     try {
-      await this.PostsModel
+      return this.PostsModel
         .query()
         .insert({
           title,
@@ -27,7 +27,6 @@ class PostsService {
           isDraft,
           userId,
         })
-      return true
     } catch (e) {
       this.app.get('log')(e)
       return new Unprocessable()
