@@ -10,6 +10,15 @@ class PostsService {
     this.app = app
   }
 
+  async getPostByPermission(id, userId) {
+    const post = await this.PostsModel
+      .query()
+      .findById(id)
+    if (!post) throw new NotFound()
+    if (post.userId !== userId) throw new Forbidden()
+    return post
+  }
+
   async find() {
     try {
       return this.PostsModel.query()
@@ -21,12 +30,7 @@ class PostsService {
   async get(id, params) {
     const userId = params.user.id
     try {
-      const post = await this.PostsModel
-        .query()
-        .findById(id)
-      if (!post) return new NotFound()
-      if (post.userId !== userId) return new Forbidden()
-      return post
+      return this.getPostByPermission(id, userId)
     } catch (e) {
       this.app.get('log')(e)
       return new Unprocessable()
@@ -59,10 +63,7 @@ class PostsService {
     } = data
     const userId = params.user.id
     try {
-      const post = await this.PostsModel
-        .query()
-        .findById(id)
-      if (post.userId !== userId) return new Forbidden()
+      await this.getPostByPermission(id, userId)
       await this.PostsModel
         .query()
         .update({
@@ -81,10 +82,7 @@ class PostsService {
   async remove(id, params) {
     const userId = params.user.id
     try {
-      const post = await this.PostsModel
-        .query()
-        .findById(id)
-      if (post.userId !== userId) return new Forbidden()
+      await this.getPostByPermission(id, userId)
       await this.PostsModel
         .query()
         .deleteById(id)
@@ -99,11 +97,7 @@ class PostsService {
     const { upVoteTimes } = data
     const userId = params.user.id
     try {
-      const post = await this.PostsModel
-        .query()
-        .findById(id)
-      if (post.userId !== userId) return new Forbidden()
-      const { vote } = post
+      const { vote } = await this.getPostByPermission(id, userId)
       const newVote = upVoteTimes && vote + upVoteTimes
       await this.PostsModel
         .query()

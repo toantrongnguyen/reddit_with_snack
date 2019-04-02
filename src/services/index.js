@@ -1,4 +1,7 @@
-const UsersServiceHooks = require('@hooks/users.hooks')
+const {
+  UsersServiceHooks,
+  PostsServiceHooks,
+} = require('@hooks')
 
 const UsersService = require('./users.service')
 const PostsService = require('./posts.service')
@@ -16,6 +19,6 @@ const injectService = (app, Service, hooks) => {
 module.exports = function services(app) {
   injectService(app, SignUpService)
   injectService(app, AuthenticationService)
-  injectService(app, PostsService)
+  injectService(app, PostsService, PostsServiceHooks)
   injectService(app, UsersService, UsersServiceHooks)
 }
