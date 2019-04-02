@@ -2,9 +2,12 @@ const { UsersModel } = require('@models')
 const { BadRequest } = require('@feathersjs/errors')
 
 class SignUp {
-  constructor(app) {
-    this.app = app
+  constructor() {
     this.UsersModel = UsersModel
+  }
+
+  setup(app) {
+    this.app = app
   }
 
   async create(data) {

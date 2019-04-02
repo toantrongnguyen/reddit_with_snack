@@ -7,7 +7,7 @@ const AuthenticationService = require('./authentication.service')
 
 
 const injectService = (app, Service, hooks) => {
-  app.use(Service.ROUTE, new Service(app))
+  app.use(Service.ROUTE, new Service())
   if (!hooks) return
   const service = app.service(Service.ROUTE)
   service.hooks(hooks)
