@@ -1,22 +1,23 @@
 const { UsersModel } = require('@models')
 const { BadRequest } = require('@feathersjs/errors')
-const bcrypt = require('bcrypt')
 
 class SignUp {
-  constructor(app) {
-    this.app = app
+  constructor() {
     this.UsersModel = UsersModel
+  }
+
+  setup(app) {
+    this.app = app
   }
 
   async create(data) {
     const { email, password, createdAt } = data
     try {
-      const hashedPassword = await bcrypt.hash(password, this.app.get('saltRounds'))
       await this.UsersModel
         .query()
         .insert({
           email,
-          password: hashedPassword,
+          password,
           createdAt,
         })
       return true

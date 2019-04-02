@@ -4,10 +4,13 @@ const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 
 class AuthenticationService {
-  constructor(app) {
-    this.app = app
+  constructor() {
     this.UsersModel = UsersModel
     this.AccessTokensModel = AccessTokensModel
+  }
+
+  setup(app) {
+    this.app = app
   }
 
   async create(data) {
@@ -15,7 +18,7 @@ class AuthenticationService {
     try {
       const users = await this.UsersModel
         .query()
-        .where('email', '=', email)
+        .where('email', email)
       if (!users.length) return new NotAuthenticated()
       const user = users[0]
       const hashedPassword = user.password

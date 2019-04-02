@@ -1,12 +1,16 @@
-const UsersServiceHooks = require('@hooks/users.hooks')
+const {
+  UsersServiceHooks,
+  PostsServiceHooks,
+} = require('@hooks')
 
 const UsersService = require('./users.service')
+const PostsService = require('./posts.service')
 const SignUpService = require('./signup.service')
 const AuthenticationService = require('./authentication.service')
 
 
 const injectService = (app, Service, hooks) => {
-  app.use(Service.ROUTE, new Service(app))
+  app.use(Service.ROUTE, new Service())
   if (!hooks) return
   const service = app.service(Service.ROUTE)
   service.hooks(hooks)
@@ -15,5 +19,6 @@ const injectService = (app, Service, hooks) => {
 module.exports = function services(app) {
   injectService(app, SignUpService)
   injectService(app, AuthenticationService)
+  injectService(app, PostsService, PostsServiceHooks)
   injectService(app, UsersService, UsersServiceHooks)
 }

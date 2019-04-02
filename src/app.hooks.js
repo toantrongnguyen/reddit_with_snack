@@ -23,7 +23,9 @@ module.exports = {
   },
 
   error: {
-    all: [log()],
+    all(context) {
+      console.error(`Error in '${context.path}' service method '${context.method}'`, context.error.stack)
+    },
     find: [],
     get: [],
     create: [],
