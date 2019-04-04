@@ -6,6 +6,7 @@ const {
 const UsersService = require('./users.service')
 const PostsService = require('./posts.service')
 const SignUpService = require('./signup.service')
+const CommentsService = require('./comments.service')
 const AuthenticationService = require('./authentication.service')
 
 
@@ -21,4 +22,5 @@ module.exports = function services(app) {
   injectService(app, AuthenticationService)
   injectService(app, PostsService, PostsServiceHooks)
   injectService(app, UsersService, UsersServiceHooks)
+  injectService(app, CommentsService)
 }
