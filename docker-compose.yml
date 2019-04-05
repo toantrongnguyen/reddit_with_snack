@@ -1,32 +1,26 @@
 version: "3"
 services:
-  web:
-    image: toantnweb/my-first-image
-    ports:
-      - "3333:80"
-
   node:
     build: .
+    environment:
+      - PORT=3030
+    volumes:
+      - .:/home/app
+    tty: true
     ports:
       - "3030:3030"
+    depends_on:
+      - mysql
 
-  # workspace:
-  #   image: "node:10"
-  #   volumes:
-  #     - .:/usr/src/node
-  #   working_dir: /usr/src/node
-  #   # command: bash -c "npm install && npm run dev"
-  #   ports:
-  #     - 3030:3030
-  #     - 1235:1235
-
-  db:
+  mysql:
     restart: always
     image: mysql:5.7
     volumes:
       - ./.docker/mysql:/var/lib/mysql
+    ports:
+      - "3306:3306"
     expose:
-      - "3306"
+      - 3306
     environment:
       MYSQL_DATABASE: reddit_db
       MYSQL_ROOT_PASSWORD: 123456
