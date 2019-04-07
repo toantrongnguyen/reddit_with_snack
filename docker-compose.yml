@@ -3,10 +3,12 @@ services:
   node:
     # build: .
     image: toantnweb/reddit-node
+    restart: always
     environment:
       - PORT=3030
     volumes:
       - .:/home/app
+      - /home/app/node_modules
     tty: true
     ports:
       - "3030:3030"
