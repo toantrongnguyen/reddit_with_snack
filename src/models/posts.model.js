@@ -7,7 +7,7 @@ class Posts extends Model {
 
   $beforeInsert() {
     this.vote = this.vote || 0
-    this.isDraft = this.isDraft || true
+    this.publish = this.publish || true
     const date = new Date()
     this.createdAt = date
     this.updatedAt = date
@@ -32,7 +32,7 @@ class Posts extends Model {
         table.integer('userId').unsigned()
         table.string('title')
         table.text('body')
-        table.boolean('isDraft').defaultTo(true)
+        table.boolean('publish').defaultTo(true)
         table.integer('vote').unsigned().defaultTo(0)
         table.datetime('createdAt')
         table.datetime('updatedAt')

@@ -8,8 +8,4 @@ ENV PORT 3030
 
 EXPOSE 3030
 
-COPY package*.json ./
-
-RUN npm install
-
-CMD ["npm", "run", "dev"]
+CMD ["npm", "start"]

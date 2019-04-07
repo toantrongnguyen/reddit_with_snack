@@ -7,6 +7,7 @@ class Comments extends Model {
 
   async $beforeInsert() {
     const date = new Date()
+    this.likes = this.likes || 0
     this.createdAt = date
     this.updatedAt = date
   }

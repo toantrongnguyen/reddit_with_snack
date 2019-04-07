@@ -44,7 +44,7 @@ class Users extends Model {
       })
         .then(async () => {
           console.log('Created table', Users.tableName) // eslint-disable-line no-console
-          await knex(Users.tableName).insert({ email: 'admin@example.com', password: await hashPassword('123456') })
+          await knex(Users.tableName).insert({ email: 'admin@example.com', password: await hashPassword('12345678') })
         })
         .catch(e => console.error('Error creating table', Users.tableName, e)) // eslint-disable-line no-console
     }
