@@ -24,7 +24,7 @@ module.exports = {
 
   error: {
     all(context) {
-      console.error(`Error in '${context.path}' service method '${context.method}'`, context.error.stack)
+      console.error(`Error in '${context.path}' service method '${context.method}'`, context.error.stack) // eslint-disable-line
     },
     find: [],
     get: [],

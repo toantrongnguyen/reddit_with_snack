@@ -112,3 +112,4 @@ lib/
 data/
 package-lock.json
 yarn.lock
+.docker

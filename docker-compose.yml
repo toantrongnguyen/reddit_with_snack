@@ -1,0 +1,33 @@
+version: "3"
+services:
+  node:
+    # build: .
+    image: toantnweb/reddit-node
+    environment:
+      - PORT=3030
+    volumes:
+      - .:/home/app
+    tty: true
+    ports:
+      - "3030:3030"
+    depends_on:
+      - mysql
+
+  mysql:
+    restart: always
+    image: mysql:5.7
+    volumes:
+      - ./.docker:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    expose:
+      - 3306
+    environment:
+      MYSQL_DATABASE: reddit_db
+      MYSQL_ROOT_PASSWORD: 123456
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080

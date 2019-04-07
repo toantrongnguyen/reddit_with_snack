@@ -38,7 +38,7 @@ class PostsService {
   }
 
   async create(data, params) {
-    const { title, body, isDraft } = data
+    const { title, body, publish } = data
     const userId = params.user.id
     try {
       return this.PostsModel
@@ -46,7 +46,7 @@ class PostsService {
         .insert({
           title,
           body,
-          isDraft,
+          publish,
           userId,
         })
     } catch (e) {
@@ -59,7 +59,7 @@ class PostsService {
     const {
       title,
       body,
-      isDraft,
+      publish,
     } = data
     const userId = params.user.id
     try {
@@ -69,7 +69,7 @@ class PostsService {
         .update({
           title,
           body,
-          isDraft,
+          publish,
         })
         .where('id', id)
       return true
