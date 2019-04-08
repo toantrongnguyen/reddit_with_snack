@@ -1,9 +1,17 @@
 const passport = require('passport')
-// const authenticationMiddleware = require('./authentication.middleware')
-
+const path = require('path')
+const swaggerUi = require('swagger-ui-express')
+const YAML = require('yamljs')
+const swaggerDocument = YAML.load(path.resolve(__dirname, '../../api/index.yml'))
+console.log(swaggerUi.serve)
 const PUBLIC_PATH = ['/signup', '/login']
 
 module.exports = function middleware(app) {
+  app.use(
+    '/docs',
+    swaggerUi.serve,
+    swaggerUi.setup(swaggerDocument)
+  )
   app.use(
     '/',
     (req, res, next) => {

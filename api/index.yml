@@ -1,0 +1,225 @@
+---
+swagger: '2.0'
+info:
+  version: 1.0.0
+  title: Reddit with snack documents
+  description: Reddit with snack documents with swagger
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+host: localhost:3030
+basePath: "/"
+tags:
+- name: Authentications
+  description: API for authentication in the system
+- name: Posts
+  description: API for posts in the system
+- name: Comments
+  description: API for comments in the system
+schemes:
+- http
+consumes:
+- application/json
+produces:
+- application/json
+
+paths:
+  "/login":
+    post:
+      tags:
+      - Authentications
+      description: Login user in system
+      parameters:
+      - name: email
+      - name: password
+        in: body
+        description: Authentication of user that we want to login
+        schema:
+          "$ref": "#/definitions/User"
+        produces:
+        - application/json
+        responses:
+          '200':
+            description: Authentication key is created
+            schema:
+              "$ref": "#/definitions/AccessToken"
+
+  "/signup":
+    post:
+      tags:
+      - Authentications
+      description: Create a user in system
+      parameters:
+      - email: title
+      - password: body
+        in: body
+        description: Authentication of user that we want to create
+        schema:
+          "$ref": "#/definitions/User"
+        produces:
+        - application/json
+        responses:
+          '200':
+            description: A user is created
+            schema:
+              "$ref": "#/definitions/User"
+
+  "/posts":
+    post:
+      tags:
+      - Posts
+      description: Create new post in system
+      parameters:
+      - title: title
+      - body: body
+        in: body
+        description: Content of the post that we want to create
+        schema:
+          "$ref": "#/definitions/Post"
+      produces:
+      - application/json
+      responses:
+        '200':
+          description: New post is created
+          schema:
+            "$ref": "#/definitions/Post"
+    get:
+      tags:
+      - Posts
+      summary: Get all posts in system
+      responses:
+        '200':
+          description: OK
+          schema:
+            "$ref": "#/definitions/Posts"
+  "/posts/{postId}":
+    parameters:
+    - name: postId
+      in: path
+      required: true
+      description: ID of post that we want to find
+      type: string
+    get:
+      tags:
+      - Posts
+      summary: Get post with given ID
+      responses:
+        '200':
+          description: Posts is found
+          schema:
+            "$ref": "#/definitions/Post"
+    delete:
+      summary: Delete posts with given ID
+      tags:
+      - Posts
+      responses:
+        '200':
+          description: Posts is deleted
+          schema:
+            "$ref": "#/definitions/Posts"
+    put:
+      summary: Update post with give ID
+      tags:
+      - Posts
+      parameters:
+      - name: title
+      - name: body
+        in: body
+        description: Post with new values of properties
+        schema:
+          "$ref": "#/definitions/Posts"
+      responses:
+        '200':
+          description: Post is updated
+          schema:
+            "$ref": "#/definitions/Post"
+
+  "/comments":
+    post:
+      tags:
+      - Comments
+      description: Create new comments of a post in system
+      parameters:
+      - name: postId
+        in: param
+        description: Id of the post that we want to comment
+      - name: content
+        in: body
+        description: Content of the post that we want to create
+        schema:
+          "$ref": "#/definitions/Comment"
+      produces:
+      - application/json
+      responses:
+        '200':
+          description: New post is created
+          schema:
+            "$ref": "#/definitions/Post"
+
+  "/comments/{commentId}":
+    parameters:
+    - name: commentId
+      in: path
+      required: true
+      description: ID of comment that we want to find
+      type: string
+    delete:
+      summary: Delete comment with given ID
+      tags:
+      - Comments
+      responses:
+        '200':
+          description: Comment is deleted
+          schema:
+            "$ref": "#/definitions/Comment"
+    put:
+      summary: Update comment with give ID
+      tags:
+      - Comments
+      parameters:
+      - name: content
+        in: body
+        description: Comment with new values of properties
+        schema:
+          "$ref": "#/definitions/Comment"
+      responses:
+        '200':
+          description: Comment is updated
+          schema:
+            "$ref": "#/definitions/Comment"
+definitions:
+  User:
+    required:
+    - email
+    - password
+    properties:
+      email:
+        type: string
+        uniqueItems: true
+        example: admin@example.com
+      password:
+        type: string
+        example: "12345678"
+  Users:
+    type: array
+    "$ref": "#/definitions/User"
+  Post:
+    properties:
+      title:
+        type: string
+      body:
+        type: string
+  Posts:
+    type: array
+    "$ref": "#/definitions/Post"
+  AccessToken:
+    properties:
+      accessToken:
+        type: string
+  Comment:
+    properties:
+      content:
+        type: string
+  Comments:
+    type: array
+    "$ref": "#/definitions/Comment"
