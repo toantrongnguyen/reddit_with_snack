@@ -41,6 +41,7 @@ class Users extends Model {
         table.string('email').unique()
         table.string('password')
         table.datetime('createdAt')
+        table.datetime('updatedAt')
       })
         .then(async () => {
           console.log('Created table', Users.tableName) // eslint-disable-line no-console
