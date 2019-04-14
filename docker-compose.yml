@@ -1,17 +1,21 @@
-version: "3"
+version: "3.4"
 services:
   node:
-    # build: .
+    build:
+      context: .
+      dockerfile: ./Dockerfile
     image: toantnweb/reddit-node
     restart: always
     environment:
       - PORT=3030
     volumes:
       - .:/home/app
-      - /home/app/node_modules
     tty: true
     ports:
       - "3030:3030"
+    entrypoint:
+      - ./entrypoint.sh
+    working_dir: /home/app
     depends_on:
       - mysql
 
@@ -19,7 +23,7 @@ services:
     restart: always
     image: mysql:5.7
     volumes:
-      - ./.docker:/var/lib/mysql
+      - database:/var/lib/mysql
     ports:
       - "3306:3306"
     expose:
@@ -33,3 +37,7 @@ services:
     restart: always
     ports:
       - 8080:8080
+volumes:
+  database:
+    driver: local
+    name: red-snack-db
