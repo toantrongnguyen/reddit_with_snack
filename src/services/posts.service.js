@@ -23,7 +23,7 @@ class PostsService {
     try {
       return this.PostsModel.query()
     } catch (e) {
-      return new Unprocessable()
+      throw new Unprocessable()
     }
   }
 
@@ -32,8 +32,7 @@ class PostsService {
     try {
       return this.getPostByPermission(id, userId)
     } catch (e) {
-      this.app.get('log')(e)
-      return new Unprocessable()
+      throw new Unprocessable()
     }
   }
 
@@ -50,8 +49,7 @@ class PostsService {
           userId,
         })
     } catch (e) {
-      this.app.get('log')(e)
-      return new Unprocessable()
+      throw new Unprocessable()
     }
   }
 
@@ -62,8 +60,8 @@ class PostsService {
       publish,
     } = data
     const userId = params.user.id
+    await this.getPostByPermission(id, userId)
     try {
-      await this.getPostByPermission(id, userId)
       await this.PostsModel
         .query()
         .update({
@@ -74,30 +72,28 @@ class PostsService {
         .where('id', id)
       return true
     } catch (e) {
-      this.app.get('log')(e)
-      return new Unprocessable()
+      throw new Unprocessable()
     }
   }
 
   async remove(id, params) {
     const userId = params.user.id
+    await this.getPostByPermission(id, userId)
     try {
-      await this.getPostByPermission(id, userId)
       await this.PostsModel
         .query()
         .deleteById(id)
       return true
     } catch (e) {
-      this.app.get('log')(e)
-      return new Unprocessable()
+      throw new Unprocessable()
     }
   }
 
   async patch(id, data, params) {
     const { upVoteTimes } = data
     const userId = params.user.id
+    const { vote } = await this.getPostByPermission(id, userId)
     try {
-      const { vote } = await this.getPostByPermission(id, userId)
       const newVote = upVoteTimes && vote + upVoteTimes
       await this.PostsModel
         .query()
@@ -107,8 +103,7 @@ class PostsService {
         .where('id', id)
       return true
     } catch (e) {
-      this.app.get('log')(e)
-      return new Unprocessable()
+      throw new Unprocessable()
     }
   }
 }

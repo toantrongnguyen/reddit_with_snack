@@ -4,7 +4,7 @@
     "test": "NODE_ENV= npm run jest",
     "lint": "eslint src/. --config .eslintrc.json",
     "lint:fix": "npm run lint -- --fix",
-    "dev": "pm2 start src/",
+    "dev": "nodemon src/",
     "start": "node src/",
     "jest": "jest"
   },
@@ -53,6 +53,7 @@
     "knex": "^0.16.3",
     "module-alias": "^2.2.0",
     "mysql2": "^1.6.5",
+    "nodemon": "^1.18.11",
     "objection": "^1.6.3",
     "passport": "^0.4.0",
     "passport-http-bearer": "^1.0.1",

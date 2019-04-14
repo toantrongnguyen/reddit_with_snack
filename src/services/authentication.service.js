@@ -15,20 +15,20 @@ class AuthenticationService {
 
   async create(data) {
     const { email, password } = data
+    let users = []
     try {
-      const users = await this.UsersModel
+      users = await this.UsersModel
         .query()
         .where('email', email)
-      if (!users.length) return new NotAuthenticated()
-      const user = users[0]
-      const hashedPassword = user.password
-      const isMatchedPassword = await bcrypt.compare(password, hashedPassword)
-      if (!isMatchedPassword) return new NotAuthenticated()
-      return this.generateJWTToken(user)
     } catch (e) {
-      this.app.get('log')(e)
-      return new Unprocessable()
+      throw new Unprocessable()
     }
+    if (!users.length) throw new NotAuthenticated()
+    const user = users[0]
+    const hashedPassword = user.password
+    const isMatchedPassword = await bcrypt.compare(password, hashedPassword)
+    if (!isMatchedPassword) throw new NotAuthenticated()
+    return this.generateJWTToken(user)
   }
 
   async generateJWTToken(payload) {
@@ -40,8 +40,7 @@ class AuthenticationService {
         .insert({ accessToken, userId: id })
       return { accessToken }
     } catch (e) {
-      this.app.get('log')(e)
-      return new Unprocessable()
+      throw new Unprocessable()
     }
   }
 }

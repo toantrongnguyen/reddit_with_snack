@@ -24,6 +24,7 @@ class Comments extends Model {
         table.increments('id').primary()
         table.integer('userId')
         table.integer('postId')
+        table.integer('commentId')
         table.text('content')
         table.integer('likes')
         table.datetime('createdAt')
