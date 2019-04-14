@@ -15,8 +15,7 @@ class UsersService {
       return this.UsersModel.query()
         .select('id', 'email')
     } catch (e) {
-      this.app.get('logger').error(e)
-      return new Unprocessable()
+      throw new Unprocessable()
     }
   }
 }

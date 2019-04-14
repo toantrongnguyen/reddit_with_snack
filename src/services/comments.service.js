@@ -11,13 +11,13 @@ class CommentsService {
     this.app = app
   }
 
-  async getCommentByPermission(id, userId) {
+  async getCommentByPermission(id, userId, checkBelongToCurrentUser = true) {
     if (!id) throw new NotFound()
     const comment = await this.CommentsModel
       .query()
       .findById(id)
     if (!comment) throw new NotFound()
-    if (comment.userId !== userId) throw new Forbidden()
+    if (checkBelongToCurrentUser && comment.userId !== userId) throw new Forbidden()
     return comment
   }
 
@@ -45,12 +45,32 @@ class CommentsService {
         .where('postId', postId)
         .select(
           'comments.id',
+          'comments.commentId',
           'comments.content',
           'comments.updatedAt as date',
           'users.id as userId',
           'users.email as userEmail',
         )
-      return comments
+
+      // Mapping child - parrent comment
+      for (let i = comments.length; i--; i >= 0) {
+        const comment = comments[i]
+        const { commentId } = comment
+        if (!commentId) break
+        const parentComment = comments.find(item => item.id === commentId)
+        if (parentComment.children) parentComment.children.push(comment)
+        else parentComment.children = [comment]
+        delete comments[i]
+      }
+
+      const filterNullComments = comments.filter((comment) => {
+        if (comment) {
+          if (!comment.children) comment.children = []
+          return true
+        }
+        return false
+      })
+      return filterNullComments
     } catch (e) {
       this.app.get('log')(e)
       return new Unprocessable()
@@ -58,35 +78,29 @@ class CommentsService {
   }
 
   async create(data, params) {
-    const { content, postId } = data
+    const { content, parrentId } = data
     const userId = params.user.id
-    try {
-      await this.checkPostExist(postId)
-    } catch (e) {
-      return e
-    }
+    const { postId } = params.query
+    await this.checkPostExist(postId)
+    if (parrentId) await this.getCommentByPermission(parrentId, userId, false)
     try {
       return this.CommentsModel
         .query()
         .insert({
           postId,
           userId,
+          commentId: parrentId,
           content,
         })
     } catch (e) {
-      this.app.get('log')(e)
-      return new Unprocessable()
+      throw new Unprocessable()
     }
   }
 
   async update(id, data, params) {
     const { content } = data
     const userId = params.user.id
-    try {
-      await this.getCommentByPermission(id, userId)
-    } catch (e) {
-      return e
-    }
+    await this.getCommentByPermission(id, userId)
     try {
       await this.CommentsModel
         .query()
@@ -94,26 +108,20 @@ class CommentsService {
         .where('id', id)
       return true
     } catch (e) {
-      this.app.get('log')(e)
-      return new Unprocessable()
+      throw new Unprocessable()
     }
   }
 
   async remove(id, params) {
     const userId = params.user.id
-    try {
-      await this.getCommentByPermission(id, userId)
-    } catch (e) {
-      return e
-    }
+    await this.getCommentByPermission(id, userId)
     try {
       await this.CommentsModel
         .query()
         .deleteById(id)
       return true
     } catch (e) {
-      this.app.get('log')(e)
-      return new Unprocessable()
+      throw new Unprocessable()
     }
   }
 }
