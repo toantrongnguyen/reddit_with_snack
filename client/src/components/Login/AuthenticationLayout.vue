@@ -8,17 +8,17 @@
     </div>
     <div class="branding">
       <img src="@/assets/images/logo.png" class="logo">
-      <p class="wrapper__label">We are Vue</p>
+      <p class="wrapper__label">{{ $t('app.vue') }}</p>
     </div>
     <div class="login-form">
       <div class="col-10 offset-1 offset-sm-3">
-        <p class="text-left">Please login to your account</p>
+        <p class="text-left">{{ $t('login.please_login') }}</p>
       </div>
       <div v-if="error" class="alert alert-danger col-sm-10 offset-sm-1">{{ errorMessage }}</div>
       <form @submit.prevent="validateFormData">
         <div class="form-panel col-lg-8 col-md-10 container">
           <div>
-            <label class="form-panel__label text-left col-sm-10" for="email">Username</label>
+            <label class="form-panel__label text-left col-sm-10" for="email">{{ $t('login.username') }}</label>
             <input
               class="col-sm-10"
               id="email"
@@ -29,7 +29,7 @@
               placeholder="Phone no or email id" autocomplete="off"/>
           </div>
           <div>
-            <label class="form-panel__label text-left col-sm-10" for="password">Password</label>
+            <label class="form-panel__label text-left col-sm-10" for="password">{{ $t('login.password') }}</label>
             <input
               class="col-sm-10"
               type="password"
@@ -40,24 +40,29 @@
               placeholder="Password" />
           </div>
           <div>
-            <button class="form-panel__submit col-sm-10">Login to Vue</button>
-            <a href="#" class="form-panel__forgot-pwd">Forgot password?</a>
+            <button class="form-panel__submit col-sm-10">{{ $t('login.login') }}</button>
+            <a href="#" class="form-panel__forgot-pwd">{{ $t('login.forgotPassword') }}</a>
           </div>
         </div>
       </form>
     </div>
     <div class="footer row">
-      <p class="footer__create-account-inline col-4 col-md-5 col-lg-4 col-xl-3">Don't have an account?</p>
+      <p class="footer__create-account-inline col-4 col-md-5 col-lg-4 col-xl-3">{{ $t('login.dont_have_account') }}</p>
       <button class="btn footer__btn-create-new col-md-5 col-sm-3 col-lg-4 col-xl-3 col-4">
-        <span class="footer__btn-create-new__text-span">Create new</span>
+        <span class="footer__btn-create-new__text-span">{{ $t('login.create') }}</span>
       </button>
     </div>
   </div>
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+import RedirectIfAuthenticated from '@/mixins/RedirectIfAuthenticated'
+
 export default {
   name: 'AuthenticationLayout',
+
+  mixins: [RedirectIfAuthenticated],
 
   data: () => ({
     email: '',
@@ -67,6 +72,10 @@ export default {
   }),
 
   methods: {
+    ...mapActions('Global', [
+      'dispatchLogin',
+    ]),
+
     validateFormData() {
       this.errorMessage = null
       this.$validator.validateAll().then(result => {
@@ -84,6 +93,16 @@ export default {
         email: this.email,
         password: this.password,
       }
+
+      this.dispatchLogin(data)
+        .then(() => {
+          this.error = false
+          this.__redirect()
+        })
+        .catch((errors) => {
+          this.error = true
+          this.errorMessage = this.$t('login.loginError')
+        })
     },
   }
 }
@@ -108,6 +127,18 @@ export default {
   @include margin('top', 80px);
 
   .alert {
+  }
+
+  &__header {
+    @include horizontal-margin-auto;
+    width: 50%;
+
+    &__text {
+      @include horizontal-margin-auto;
+      @include padding('left', 32px);
+      width: 90%;
+      font-size: 17px;
+    }
   }
 
   &__header {

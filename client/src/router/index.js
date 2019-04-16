@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import store from '@/stores'
 
 Vue.use(Router)
 
@@ -24,8 +25,19 @@ const router = new Router({
       path: '/login',
       name: 'login',
       component: LoginPage,
+      meta: { globalAccess: true },
     },
   ],
+})
+
+router.beforeEach((to, from, next) => {
+  const requireAuth = to.matched.some(route => !route.meta.globalAccess)
+  const { isLogin } = store.state.Global
+  if (!requireAuth || isLogin) {
+    return next()
+  }
+
+  return next("/login")
 })
 
 export default router
