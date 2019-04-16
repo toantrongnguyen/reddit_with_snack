@@ -28,7 +28,7 @@ class PostsService {
   }
 
   async get(id, params) {
-    const userId = params.user.id
+    const { userId } = params.user
     try {
       return this.getPostByPermission(id, userId)
     } catch (e) {
@@ -38,7 +38,7 @@ class PostsService {
 
   async create(data, params) {
     const { title, body, publish } = data
-    const userId = params.user.id
+    const { userId } = params.user
     try {
       return this.PostsModel
         .query()
@@ -59,7 +59,7 @@ class PostsService {
       body,
       publish,
     } = data
-    const userId = params.user.id
+    const { userId } = params.user
     await this.getPostByPermission(id, userId)
     try {
       await this.PostsModel
@@ -77,7 +77,7 @@ class PostsService {
   }
 
   async remove(id, params) {
-    const userId = params.user.id
+    const { userId } = params.user
     await this.getPostByPermission(id, userId)
     try {
       await this.PostsModel
@@ -91,7 +91,7 @@ class PostsService {
 
   async patch(id, data, params) {
     const { upVoteTimes } = data
-    const userId = params.user.id
+    const { userId } = params.user
     const { vote } = await this.getPostByPermission(id, userId)
     try {
       const newVote = upVoteTimes && vote + upVoteTimes

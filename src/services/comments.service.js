@@ -74,18 +74,18 @@ class CommentsService {
   }
 
   async create(data, params) {
-    const { content, parrentId } = data
-    const userId = params.user.id
+    const { content, parentId } = data
+    const { userId } = params.user
     const { postId } = params.query
     await this.checkPostExist(postId)
-    if (parrentId) await this.getCommentByPermission(parrentId, userId, false)
+    if (parentId) await this.getCommentByPermission(parentId, userId, false)
     try {
       return this.CommentsModel
         .query()
         .insert({
           postId,
           userId,
-          commentId: parrentId,
+          commentId: parentId,
           content,
         })
     } catch (e) {
@@ -95,7 +95,7 @@ class CommentsService {
 
   async update(id, data, params) {
     const { content } = data
-    const userId = params.user.id
+    const { userId } = params.user
     await this.getCommentByPermission(id, userId)
     try {
       await this.CommentsModel
@@ -109,7 +109,7 @@ class CommentsService {
   }
 
   async remove(id, params) {
-    const userId = params.user.id
+    const { userId } = params.user
     await this.getCommentByPermission(id, userId)
     try {
       await this.CommentsModel

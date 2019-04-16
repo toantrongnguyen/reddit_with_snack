@@ -22,7 +22,8 @@ module.exports = function middleware(app) {
       passport.authenticate('bearer', { session: false })(req, res, next)
     },
     (req, res, next) => {
-      req.feathers.user = req.user
+      const { userId, email, accessToken } = req.user || {}
+      req.feathers.user = { userId, email, accessToken }
       next()
     },
   )
