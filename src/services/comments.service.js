@@ -33,11 +33,7 @@ class CommentsService {
 
   async find(params) {
     const { query: { postId } } = params
-    try {
-      await this.checkPostExist(postId)
-    } catch (e) {
-      return e
-    }
+    await this.checkPostExist(postId)
     try {
       const comments = await this.CommentsModel
         .query()
