@@ -1,0 +1,41 @@
+language: node_js
+
+branches:
+  only:
+  - development
+
+sudo: required
+
+services:
+  - docker
+dist: trusty
+
+env:
+  COMPOSE_VERSION: 1.5.2
+
+before_install:
+  # Docker Compose Install 
+  - curl -L https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
+  - chmod +x docker-compose
+  - sudo mv docker-compose /usr/local/bin
+  # Download and install Docker libs
+  - curl -L https://github.com/Ortus-Solutions/docker-buildfiles/archive/master.zip > docker.zip
+  - unzip docker.zip -d workbench
+  - mv workbench/docker-buildfiles-master workbench/docker
+  # CommandBox Keys
+  - sudo apt-key adv --keyserver keys.gnupg.net --recv 6DA70622
+  - sudo echo "deb http://downloads.ortussolutions.com/debs/noarch /" | sudo tee -a
+    /etc/apt/sources.list.d/commandbox.list
+
+install:
+  # Docker CFML Server Tests
+  - docker-compose build
+  - docker-compose up -d
+
+before_script:
+  # Startup the app
+  - curl http://localhost:3030/
+
+after_script:
+  - docker-compose stop
+  - docker-compose rm -f
