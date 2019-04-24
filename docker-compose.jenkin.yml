@@ -3,6 +3,7 @@ services:
   jenkin:
     image: jenkins/jenkins
     restart: always
+    user: root
     ports:
       - "1000:8080"
     volumes:
