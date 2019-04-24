@@ -1,0 +1,10 @@
+version: "3.4"
+services:
+  jenkin:
+    image: jenkins/jenkins
+    restart: always
+    ports:
+      - "1000:8080"
+    volumes:
+      - .:/home/work
+    working_dir: /home/work
