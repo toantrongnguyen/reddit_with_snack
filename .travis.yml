@@ -6,7 +6,10 @@ branches:
 
 sudo: required
 
-services:
+env:
+  - SERVER_IP_ADDRESS=54.169.86.114
+
+  services:
 - docker
 
 before_script:
@@ -27,6 +30,7 @@ before_install:
 - openssl aes-256-cbc -K $encrypted_da2751d119bb_key -iv $encrypted_da2751d119bb_iv
   -in id_rsa.enc -out ~/.ssh/id_rsa -d
 - chmod 400 ~/.ssh/id_rsa
+- echo -e "Host $SERVER_IP_ADDRESS\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
 - eval "$(ssh-agent -s)"
 - ssh-add ~/.ssh/id_rsa
 - ssh newuser@54.169.86.114 pwd
