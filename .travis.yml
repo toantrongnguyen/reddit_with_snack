@@ -9,7 +9,7 @@ sudo: required
 env:
   - SERVER_IP_ADDRESS=54.169.86.114
 
-  services:
+services:
 - docker
 
 before_script:
