@@ -16,8 +16,8 @@ before_script:
 - docker -v
 - docker-compose -v
 - sudo service mysql stop
-- docker-compose build
-- docker-compose up -d
+# - docker-compose build
+# - docker-compose up -d
 # - sleep 30
 
 script:
@@ -38,6 +38,6 @@ deploy:
   provider: script
   skip_cleanup: true
   script: 
-    - ssh newuser@54.169.86.114 "sudo /home/work/reddit_with_snack/deploy.sh"
+    - ssh newuser@$SERVER_IP_ADDRESS "sudo /home/work/reddit_with_snack/deploy.sh"
   on:
     branch: master
