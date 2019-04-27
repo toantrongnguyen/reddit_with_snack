@@ -35,7 +35,6 @@ before_install:
 - ssh-add ~/.ssh/id_rsa
 - ssh newuser@54.169.86.114 pwd
 
-
 # before_deploy:
 #   - eval "$(ssh-agent -s)"
 #   - ssh-add ~/.ssh/id_rsa
