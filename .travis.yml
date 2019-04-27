@@ -33,18 +33,20 @@ before_install:
 - echo -e "Host $SERVER_IP_ADDRESS\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
 - eval "$(ssh-agent -s)"
 - ssh-add ~/.ssh/id_rsa
-- ssh newuser@54.169.86.114 pwd
+- ssh newuser@54.169.86.114 "sudo /home/work/reddit_with_snack/deploy.sh"
 
-# before_deploy:
-#   - eval "$(ssh-agent -s)"
-#   - ssh-add ~/.ssh/id_rsa
-#   - ssh newuser@54.169.86.114
-#   - cd /home/work/reddit_with_snack/
-#   - sudo git pull origin master
+before_deploy:
+- openssl aes-256-cbc -K $encrypted_da2751d119bb_key -iv $encrypted_da2751d119bb_iv
+-in id_rsa.enc -out ~/.ssh/id_rsa -d
+- chmod 400 ~/.ssh/id_rsa
+- echo -e "Host $SERVER_IP_ADDRESS\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
+- eval "$(ssh-agent -s)"
+- ssh-add ~/.ssh/id_rsa
 
-# deploy:
-#   provider: script
-#   skip_cleanup: true
-#   script: rsync -r --delete-after --quiet $TRAVIS_BUILD_DIR/<dir> <ssh-user>@<deploy-host>:path/to/files
-#   on:
-#     branch: master
+deploy:
+  provider: script
+  skip_cleanup: true
+  script: 
+    - ssh newuser@54.169.86.114 "sudo /home/work/reddit_with_snack/deploy.sh"
+  on:
+    branch: master
