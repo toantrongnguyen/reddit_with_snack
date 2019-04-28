@@ -1,0 +1,43 @@
+language: generic
+
+branches:
+  only:
+  - master
+
+sudo: required
+
+env:
+  - SERVER_IP_ADDRESS=54.169.86.114
+
+services:
+- docker
+
+before_script:
+- docker -v
+- docker-compose -v
+# - sudo service mysql stop
+# - docker-compose build
+# - docker-compose up -d
+# - sleep 30
+
+script:
+# - curl http://localhost:3030
+
+after_script:
+# - docker-compose -f docker-compose.travis.yml down
+
+before_deploy:
+- openssl aes-256-cbc -K $encrypted_da2751d119bb_key -iv $encrypted_da2751d119bb_iv
+  -in id_rsa.enc -out ~/.ssh/id_rsa -d
+- chmod 400 ~/.ssh/id_rsa
+- echo -e "Host $SERVER_IP_ADDRESS\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
+- eval "$(ssh-agent -s)"
+- ssh-add ~/.ssh/id_rsa
+
+deploy:
+  provider: script
+  skip_cleanup: true
+  script: 
+    - ssh newuser@$SERVER_IP_ADDRESS "sudo /home/work/reddit_with_snack/deploy.sh"
+  on:
+    branch: master
