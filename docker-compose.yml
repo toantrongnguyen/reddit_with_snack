@@ -13,6 +13,7 @@ services:
     tty: true
     ports:
       - "3030:3030"
+      - "3031:3031"
     entrypoint:
       - ./entrypoint.sh
     working_dir: /home/app
@@ -34,7 +35,7 @@ services:
       MYSQL_ROOT_PASSWORD: 123456
 
   adminer:
-    image: adminer
+    image: adminer:4.7.1
     restart: always
     ports:
       - 8081:8080

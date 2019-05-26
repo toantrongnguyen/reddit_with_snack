@@ -5,6 +5,7 @@ Vue.use(Router)
 
 const TestPage = () => import('../pages/TestPage')
 const Hompage = () => import('../pages/Hompage')
+const LoginPage = () => import('../pages/LoginPage')
 
 const router = new Router({
   mode: 'history',
@@ -14,11 +15,15 @@ const router = new Router({
       name: 'homepage',
       component: Hompage,
     },
-
     {
       path: '/test',
       name: 'test',
       component: TestPage,
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: LoginPage,
     },
   ],
 })
