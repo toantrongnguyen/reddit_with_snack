@@ -61,6 +61,7 @@
     "passport-local": "^1.0.0",
     "serve-favicon": "^2.5.0",
     "swagger-ui-express": "^4.0.2",
+    "vue-i18n": "^8.11.2",
     "winston": "^3.0.0",
     "yamljs": "^0.3.0",
     "yup": "^0.27.0"
